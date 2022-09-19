@@ -15,16 +15,39 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 '''
+import click
+from copymp3 import core
 
 
-def main():
-    ''' entrypoint '''
-    print('''
-        copymp3 Copyright (C) 2022  Rafael Delgado Martins
-        This program comes with ABSOLUTELY NO WARRANTY; for details type `show w'.
-        This is free software, and you are welcome to redistribute it
-        under certain conditions; type `show c' for details.
+@click.command()
+@click.argument('source', type=click.Path())
+@click.argument('dest', type=click.Path())
+@click.option(
+    '-s',
+    '--synchronize',
+    is_flag=True,
+    help='''
+    Delete from DEST files that don\' exist in SOURCE and copy only new
+    files.
+    '''
+)
+@click.option(
+    '-f',
+    '--flatten',
+    is_flag=True,
+    help='Put all files on the root of DEST'
+)
+def main(source, dest, synchronize, flatten):
+    ''' Copy MP3 files from SOURCE to DEST. '''
+    click.echo('''
+    copymp3 Copyright (C) 2022  Rafael Delgado Martins
+    This program comes with ABSOLUTELY NO WARRANTY;
+    This is free software, and you are welcome to redistribute it
+    under certain conditions.
     ''')
+
+    mp3_files = core.find_mp3_files(source)
+    click.echo(mp3_files)
 
 
 if __name__ == '__main__':
